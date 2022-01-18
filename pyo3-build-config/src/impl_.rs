@@ -632,6 +632,10 @@ pub fn cross_compiling(
     dbg!(&cross_python_version);
 
     let target_triple = format!("{}-{}-{}", target_arch, target_vendor, target_os);
+    dbg!(&target_triple);
+    for (var, val) in env::vars().filter(|(var, _)| var.starts_with("CARGO_")) {
+        eprintln!("{}={}", var, val);
+    }
 
     if cross.is_none() && cross_lib_dir.is_none() && cross_python_version.is_none() {
         // No cross-compiling environment variables set; try to determine if this is a known case
