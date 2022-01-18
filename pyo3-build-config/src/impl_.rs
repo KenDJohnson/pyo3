@@ -885,6 +885,7 @@ for key, val in build_time_vars.items():
 "#;
 
     let output = run_python_script(&find_interpreter()?, &script)?;
+    dbg!(&output);
 
     Ok(Sysconfigdata(parse_script_output(&output)))
 }
@@ -958,7 +959,9 @@ fn find_sysconfigdata(cross: &CrossCompileConfig) -> Result<PathBuf> {
 /// [1]: https://github.com/python/cpython/blob/3.5/Lib/sysconfig.py#L389
 pub fn find_all_sysconfigdata(cross: &CrossCompileConfig) -> Vec<PathBuf> {
     let sysconfig_paths = search_lib_dir(&cross.lib_dir, cross);
+    dbg!(&sysconfig_paths);
     let sysconfig_name = env_var("_PYTHON_SYSCONFIGDATA_NAME");
+    dbg!(&sysconfig_name);
     let mut sysconfig_paths = sysconfig_paths
         .iter()
         .filter_map(|p| {
@@ -972,6 +975,7 @@ pub fn find_all_sysconfigdata(cross: &CrossCompileConfig) -> Vec<PathBuf> {
 
     sysconfig_paths.sort();
     sysconfig_paths.dedup();
+    dbg!(&sysconfig_paths);
 
     sysconfig_paths
 }
@@ -998,6 +1002,7 @@ fn is_cpython_lib_dir(path: &str, v: &Option<PythonVersion>) -> bool {
 fn search_lib_dir(path: impl AsRef<Path>, cross: &CrossCompileConfig) -> Vec<PathBuf> {
     let mut sysconfig_paths = vec![];
     for f in fs::read_dir(path).expect("Path does not exist") {
+        eprintln!("checking for sysconfig in {:?}", f);
         sysconfig_paths.extend(match &f {
             // Python 3.7+ sysconfigdata with platform specifics
             Ok(f) if starts_with(f, "_sysconfigdata_") && ends_with(f, "py") => vec![f.path()],
@@ -1275,6 +1280,7 @@ fn fixup_config_for_abi3(
 /// CARGO_CFG_TARGET_OS which aren't available at any other time.
 pub fn make_cross_compile_config() -> Result<Option<InterpreterConfig>> {
     let mut interpreter_config = if let Some(paths) = cross_compiling_from_cargo_env()? {
+        dbg!(&paths);
         load_cross_compile_config(paths)?
     } else {
         return Ok(None);
