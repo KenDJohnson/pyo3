@@ -578,6 +578,8 @@ pub fn any_cross_compiling_env_vars_set() -> bool {
 fn cross_compiling_from_cargo_env() -> Result<Option<CrossCompileConfig>> {
     let host = cargo_env_var("HOST").ok_or("expected HOST env var")?;
     let target = cargo_env_var("TARGET").ok_or("expected TARGET env var")?;
+    dbg!(&host);
+    dbg!(&target);
 
     if host == target {
         // Definitely not cross compiling if the host matches the target
@@ -591,10 +593,13 @@ fn cross_compiling_from_cargo_env() -> Result<Option<CrossCompileConfig>> {
 
     let target_arch =
         cargo_env_var("CARGO_CFG_TARGET_ARCH").ok_or("expected CARGO_CFG_TARGET_ARCH env var")?;
+    dbg!(&target_arch);
     let target_vendor = cargo_env_var("CARGO_CFG_TARGET_VENDOR")
         .ok_or("expected CARGO_CFG_TARGET_VENDOR env var")?;
+    dbg!(&target_vendor);
     let target_os =
         cargo_env_var("CARGO_CFG_TARGET_OS").ok_or("expected CARGO_CFG_TARGET_OS env var")?;
+    dbg!(&target_os);
 
     cross_compiling(&host, &target_arch, &target_vendor, &target_os)
 }
@@ -620,8 +625,11 @@ pub fn cross_compiling(
     target_os: &str,
 ) -> Result<Option<CrossCompileConfig>> {
     let cross = env_var("PYO3_CROSS");
+    dbg!(&cross);
     let cross_lib_dir = env_var("PYO3_CROSS_LIB_DIR");
+    dbg!(&cross_lib_dir);
     let cross_python_version = env_var("PYO3_CROSS_PYTHON_VERSION");
+    dbg!(&cross_python_version);
 
     let target_triple = format!("{}-{}-{}", target_arch, target_vendor, target_os);
 
