@@ -630,6 +630,11 @@ pub fn cross_compiling(
     dbg!(&cross_lib_dir);
     let cross_python_version = env_var("PYO3_CROSS_PYTHON_VERSION");
     dbg!(&cross_python_version);
+    let target_os = if target_os == "macos" {
+        "darwin"
+    } else {
+        target_os
+    };
 
     let target_triple = format!("{}-{}-{}", target_arch, target_vendor, target_os);
     dbg!(&target_triple);
